@@ -1,14 +1,14 @@
 import lib from './lib';
 import ContainerManager from './container-manager';
 
-var slLib = lib.init(window),
-    doc = slLib.win.document,
-    M = slLib.win.Math,
-    max = M.max,
-    round = M.round,
-    htmlSplCharSpace = { ' ': '&nbsp;' },
-    documentSupport = slLib.getDocumentSupport(),
-    SVG_BBOX_CORRECTION = documentSupport.isWebKit ? 0 : 4.5;
+var slLib = lib.initialized ? lib : lib.init(window),
+	doc = slLib.win.document,
+	M = slLib.win.Math,
+	max = M.max,
+	round = M.round,
+	htmlSplCharSpace = { ' ': '&nbsp;' },
+	documentSupport = slLib.getDocumentSupport(),
+	SVG_BBOX_CORRECTION = documentSupport.isWebKit ? 0 : 4.5;
 
 
 /*
@@ -42,7 +42,7 @@ function SmartLabelManager(container, useEllipses, options) {
     }
 
     wrapper = slLib.createContainer(container);
-    wrapper.innerHTML = slLib.testStrAvg;
+	wrapper.innerHTML = slLib.testStrAvg;
 
     if (documentSupport.isHeadLess || (!documentSupport.isIE && !wrapper.offsetHeight && !wrapper.offsetWidth)) {
         isBrowserLess = true;
@@ -256,7 +256,7 @@ function spliceSlice(str, index, count, add) {
         index = 0;
       }
     }
-  
+
     return str.slice(0, index) + (add || "") + str.slice(index + count);
   }
 function getResolvedTags(text, tagIndices, brTagIndex, charOffset) {
@@ -510,7 +510,7 @@ function mergeTags(_oriText, _tempText) {
                         tempPtr++;
                     }
                 }
-            }   
+            }
         }
         return resultText;
 }
@@ -562,7 +562,7 @@ function doMergeTextWithTags(oriText, tempText) {
             tempText = dummyText;
             resultText = oriText;
             tagIndices = getSortedTagIndices(oriText);
-            brTagIndices = getSortedBRTagIndices(tempText);   
+            brTagIndices = getSortedBRTagIndices(tempText);
         }
         if(!tagIndices.length) {
             return tempText;
@@ -573,7 +573,7 @@ function doMergeTextWithTags(oriText, tempText) {
             resultText = resolveTags(resultText);
         }
         return resultText;
-    
+
 }
 /*
  * getSmartText returns the text separated by <br/> whenever a break is necessary. This is to recgonize one
@@ -967,7 +967,7 @@ SmartLabelManager.prototype.getSmartText = function (text, maxWidth, maxHeight, 
 
     if (canvas || container) {
         if (!documentSupport.isBrowserLess) {
-            
+
             if (options.cleanText !== true) {
                 tmpText = text = text.replace(slLib.ltgtquotRegex, function (match) {
                     switch(match){
@@ -1014,7 +1014,7 @@ SmartLabelManager.prototype.getSmartText = function (text, maxWidth, maxHeight, 
                 tmpText = text;
                 originalText = text;
             }
-            
+
             if (!hasHTMLTag) {
                 // Due to support of <,>, ", ' for xml we convert &lt;, &gt;, &quot;, &#034;, &#039; to <, >, ", ", ' respectively so to get the correct
                 // width it is required to convert the same before calculation for the new improve version of the
@@ -1035,7 +1035,7 @@ SmartLabelManager.prototype.getSmartText = function (text, maxWidth, maxHeight, 
                                 return '\'';
                         }
                     });
-    
+
                     tmpText = text = tmpText.replace(/<u>/g,'')
                     .replace(/<\/u>/g, '')
                     .replace(/<b>/g,'')
@@ -1063,14 +1063,14 @@ SmartLabelManager.prototype.getSmartText = function (text, maxWidth, maxHeight, 
                     .replace(/<span[\s]+([^>]+)>/g, '')
                     .replace(/<\/span>/g, '');
                 }
-                
+
 
                 getOriSizeImproveObj = this.getSize(tmpText, true, {
                     hasHTMLTag: hasHTMLTag,
                     hasOnlyBrTag: hasOnlyBrTag,
                     cleanText: true
                 });
-                
+
                 smartLabel.oriTextWidth = oriWidth = getOriSizeImproveObj.width;
                 smartLabel.oriTextHeight = oriHeight = getOriSizeImproveObj.height;
             } else if (hasOnlyBrTag) {
